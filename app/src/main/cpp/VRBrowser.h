@@ -38,6 +38,7 @@ bool AreLayersEnabled();
 void SetDeviceType(const jint aType);
 void HaltActivity(const jint aReason);
 void HandlePoorPerformance();
+void SetExternalVRSurface(jint aIndex, jobject aSurface);
 } // namespace VRBrowser;
 
 } // namespace crow
