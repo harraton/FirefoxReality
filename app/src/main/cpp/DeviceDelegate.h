@@ -45,6 +45,8 @@ public:
 
 class DeviceDelegate {
 public:
+  static const int32_t DEFAULT_EXTERNAL_SURFACE_ID = -1;
+
   virtual device::DeviceType GetDeviceType() { return device::UnknownType; }
   virtual void SetRenderMode(const device::RenderMode aMode) = 0;
   virtual device::RenderMode GetRenderMode() = 0;
@@ -67,6 +69,7 @@ public:
   virtual void StartFrame() = 0;
   virtual void BindEye(const device::Eye aWhich) = 0;
   virtual void EndFrame(bool aDiscard = false) = 0;
+  virtual void SetExternalSurfId(int32_t aSurfId) {}
   virtual VRLayerQuadPtr CreateLayerQuad(int32_t aWidth, int32_t aHeight,
                                          VRLayerSurface::SurfaceType aSurfaceType) { return nullptr; }
   virtual VRLayerQuadPtr CreateLayerQuad(const VRLayerSurfacePtr& aMoveLayer) { return nullptr; }

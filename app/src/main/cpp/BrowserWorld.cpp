@@ -1174,23 +1174,29 @@ BrowserWorld::DrawImmersive() {
   m.device->StartFrame();
   VRB_GL_CHECK(glDepthMask(GL_FALSE));
   m.externalVR->PushFramePoses(m.device->GetHeadTransform(), m.controllers->GetControllers(), m.context->GetTimestamp());
+  mozilla::gfx::VRLayerTextureType surfaceType;
   int32_t surfaceHandle, textureWidth, textureHeight = 0;
   device::EyeRect leftEye, rightEye;
   bool aDiscardFrame = !m.externalVR->WaitFrameResult();
-  m.externalVR->GetFrameResult(surfaceHandle, textureWidth, textureHeight, leftEye, rightEye);
+  m.externalVR->GetFrameResult(surfaceType, surfaceHandle, textureWidth, textureHeight, leftEye, rightEye);
   ExternalVR::VRState state = m.externalVR->GetVRState();
   if (state == ExternalVR::VRState::Rendering) {
     if (!aDiscardFrame) {
       if (textureWidth > 0 && textureHeight > 0) {
         m.device->SetImmersiveSize((uint32_t) textureWidth/2, (uint32_t) textureHeight);
       }
-      m.blitter->StartFrame(surfaceHandle, leftEye, rightEye);
-      m.device->BindEye(device::Eye::Left);
-      m.blitter->Draw(device::Eye::Left);
+      // In Oculus platform, we can render WebGL immersive frames info AndroidSurface.
+      if (surfaceType != mozilla::gfx::VRLayerTextureType::LayerTextureType_ExternalVRSurface) {
+        m.blitter->StartFrame(surfaceHandle, leftEye, rightEye);
+        m.device->BindEye(device::Eye::Left);
+        m.blitter->Draw(device::Eye::Left);
 #if !defined(VRBROWSER_NO_VR_API)
-      m.device->BindEye(device::Eye::Right);
-      m.blitter->Draw(device::Eye::Right);
+        m.device->BindEye(device::Eye::Right);
+        m.blitter->Draw(device::Eye::Right);
 #endif // !defined(VRBROWSER_NO_VR_API)
+      } else {
+        m.device->SetExternalSurfId(surfaceHandle);
+      }
     }
     m.device->EndFrame(aDiscardFrame);
     m.blitter->EndFrame();
@@ -1199,6 +1205,8 @@ BrowserWorld::DrawImmersive() {
       m.blitter->CancelFrame(surfaceHandle);
     }
     DrawLoadingAnimation();
+
+    m.device->SetExternalSurfId(DeviceDelegate::DEFAULT_EXTERNAL_SURFACE_ID);
     m.device->EndFrame(false);
   }
 }
