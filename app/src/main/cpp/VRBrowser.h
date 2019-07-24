@@ -39,6 +39,7 @@ void SetDeviceType(const jint aType);
 void HaltActivity(const jint aReason);
 void HandlePoorPerformance();
 void SetExternalVRSurface(jint aIndex, jobject aSurface);
+void ReleaseExternalVRSurfaces();
 } // namespace VRBrowser;
 
 } // namespace crow

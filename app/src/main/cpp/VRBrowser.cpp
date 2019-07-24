@@ -51,7 +51,9 @@ const char* kHaltActivitySignature = "(I)V";
 const char* kHandlePoorPerformance = "handlePoorPerformance";
 const char* kHandlePoorPerformanceSignature = "()V";
 const char* kSetExternalVRSurface = "setExternalVRSurface";
-const char* kSetExternalVRSurfaceSignature = "(ILandroid/view/Surface;)V";//"(ILandroid/view/Surface;)Z";
+const char* kSetExternalVRSurfaceSignature = "(ILandroid/view/Surface;)V";
+const char* kReleaseExternalSurfaces = "releaseExternalVRSurfaces";
+const char* kReleaseExternalSurfacesSignature = "()V";
 
 JNIEnv* sEnv = nullptr;
 jclass sBrowserClass = nullptr;
@@ -76,7 +78,8 @@ jmethodID sAreLayersEnabled = nullptr;
 jmethodID sSetDeviceType = nullptr;
 jmethodID sHaltActivity = nullptr;
 jmethodID sHandlePoorPerformance = nullptr;
-jmethodID sSetExternalVRSurface;
+jmethodID sSetExternalVRSurface = nullptr;
+jmethodID sReleaseExternalSurfaces = nullptr;
 }
 
 namespace crow {
@@ -117,6 +120,7 @@ VRBrowser::InitializeJava(JNIEnv* aEnv, jobject aActivity) {
   sHaltActivity = FindJNIMethodID(sEnv, sBrowserClass, kHaltActivity, kHaltActivitySignature);
   sHandlePoorPerformance = FindJNIMethodID(sEnv, sBrowserClass, kHandlePoorPerformance, kHandlePoorPerformanceSignature);
   sSetExternalVRSurface = FindJNIMethodID(sEnv, sBrowserClass, kSetExternalVRSurface, kSetExternalVRSurfaceSignature);
+  sReleaseExternalSurfaces = FindJNIMethodID(sEnv, sBrowserClass, kReleaseExternalSurfaces, kReleaseExternalSurfacesSignature);
 }
 
 void
@@ -336,6 +340,13 @@ void
 VRBrowser::SetExternalVRSurface(jint aIndex, jobject aSurface) {
   if (!ValidateMethodID(sEnv, sActivity, sSetExternalVRSurface, __FUNCTION__)) { return; }
   sEnv->CallVoidMethod(sActivity, sSetExternalVRSurface, aIndex, aSurface);
+  CheckJNIException(sEnv, __FUNCTION__);
+}
+
+void
+VRBrowser::ReleaseExternalVRSurfaces() {
+  if (!ValidateMethodID(sEnv, sActivity, sReleaseExternalSurfaces, __FUNCTION__)) { return; }
+  sEnv->CallVoidMethod(sActivity, sReleaseExternalSurfaces);
   CheckJNIException(sEnv, __FUNCTION__);
 }
 } // namespace crow

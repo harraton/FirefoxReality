@@ -889,12 +889,14 @@ public class VRBrowserActivity extends PlatformActivity implements WidgetManager
     }
 
     public void setExternalVRSurface(int aIndex, Surface aSurface) {
-       // Calling GeckoVRManager ...
         if (aSurface == null) {
             Log.e(LOGTAG, "aSurface is null in setExternalVRSurface...");
         }
-        Log.i(LOGTAG, "setExternalVRSurface...");
         GeckoVRManager.insertExternalSurface(aIndex, aSurface);
+    }
+
+    public void releaseExternalVRSurfaces() {
+        GeckoVRManager.releaseExternalSurfaces();
     }
 
     void createOffscreenDisplay() {

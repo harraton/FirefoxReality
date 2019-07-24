@@ -1698,6 +1698,7 @@ DeviceDelegateOculusVR::LeaveVR() {
     if (m.eyeSurfaceSwapChain[i]) {
       vrapi_DestroyTextureSwapChain(m.eyeSurfaceSwapChain[i]);
       m.eyeSurfaceSwapChain[i] = nullptr;
+      VRBrowser::ReleaseExternalVRSurfaces();
     }
   }
   if (m.cubeLayer) {
