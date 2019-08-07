@@ -62,6 +62,10 @@ class PrivacyOptionsView extends SettingsView {
             exitWholeSettings();
         });
 
+        mBinding.clearCacheButton.setOnClickListener(v -> {
+            SessionStore.get().clearCache();
+        });
+
         TextView permissionsTitleText = findViewById(R.id.permissionsTitle);
         permissionsTitleText.setText(getContext().getString(R.string.security_options_permissions_title, getContext().getString(R.string.app_name)));
 

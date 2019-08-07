@@ -44,6 +44,13 @@
                     app:buttonText="@string/developer_options_show"
                     app:description="@string/settings_privacy_policy" />
 
+                <org.mozilla.vrbrowser.ui.views.settings.ButtonSetting
+                    android:id="@+id/clearCacheButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:buttonText="@string/developer_options_clear_cache"
+                    app:description="@string/developer_options_clear_cache_description" />
+
                 <org.mozilla.vrbrowser.ui.views.settings.SwitchSetting
                     android:id="@+id/drmContentPlaybackSwitch"
                     android:layout_width="match_parent"
